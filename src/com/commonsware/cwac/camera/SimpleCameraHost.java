@@ -54,6 +54,7 @@ public class SimpleCameraHost implements CameraHost {
   public void configureRecorderAudio(int cameraId,
                                      MediaRecorder recorder) {
     recorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+    
   }
 
   @Override
@@ -74,9 +75,9 @@ public class SimpleCameraHost implements CameraHost {
     }
     else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
         && CamcorderProfile.hasProfile(cameraId,
-                                       CamcorderProfile.QUALITY_LOW)) {
+                                       CamcorderProfile.QUALITY_HIGH)) {
       recorder.setProfile(CamcorderProfile.get(cameraId,
-                                               CamcorderProfile.QUALITY_LOW));
+                                               CamcorderProfile.QUALITY_HIGH));
     }
     else {
       throw new IllegalStateException(

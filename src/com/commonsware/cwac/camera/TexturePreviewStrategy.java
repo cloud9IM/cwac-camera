@@ -19,6 +19,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import java.io.IOException;
@@ -83,4 +84,10 @@ class TexturePreviewStrategy implements PreviewStrategy,
   public View getWidget() {
     return(widget);
   }
+
+@Override
+public Surface getSurface() {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

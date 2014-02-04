@@ -16,6 +16,7 @@ package com.commonsware.cwac.camera;
 
 import android.hardware.Camera;
 import android.media.MediaRecorder;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -65,5 +66,10 @@ class SurfacePreviewStrategy implements PreviewStrategy,
   @Override
   public View getWidget() {
     return(preview);
+  }
+  
+  @Override
+  public Surface getSurface() {
+    return(previewHolder.getSurface());
   }
 }

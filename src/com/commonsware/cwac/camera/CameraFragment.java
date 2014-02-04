@@ -1,6 +1,6 @@
 /***
   Copyright (c) 2013 CommonsWare, LLC
-  
+
   Licensed under the Apache License, Version 2.0 (the "License"); you may
   not use this file except in compliance with the License. You may obtain
   a copy of the License at
@@ -16,6 +16,7 @@ package com.commonsware.cwac.camera;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,90 +25,98 @@ import android.view.ViewGroup;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CameraFragment extends Fragment {
-  private CameraView cameraView=null;
-  private CameraHost host=null;
+	private CameraView cameraView=null;
+	private CameraHost host=null;
 
-  @Override
-  public View onCreateView(LayoutInflater inflater,
-                           ViewGroup container,
-                           Bundle savedInstanceState) {
-    cameraView=new CameraView(getActivity());
-    cameraView.setHost(getHost());
-    
-    return(cameraView);
-  }
+	@Override
+	public View onCreateView(LayoutInflater inflater,
+			ViewGroup container,
+			Bundle savedInstanceState) {
+		cameraView=new CameraView(getActivity());
+		cameraView.setHost(getHost());
 
-  @Override
-  public void onResume() {
-    super.onResume();
+		return(cameraView);
+	}
 
-    cameraView.onResume();
-  }
+	@Override
+	public void onResume() {
+		super.onResume();
 
-  @Override
-  public void onPause() {
-    cameraView.onPause();
+		cameraView.onResume();
+	}
 
-    super.onPause();
-  }
-  
-  public CameraHost getHost() {
-    if (host==null) {
-      host=new SimpleCameraHost(getActivity());
-    }
-    
-    return(host);
-  }
- 
-  public void setHost(CameraHost host) {
-    this.host=host;
-  }
-  
-  public void takePicture() {
-    takePicture(false, true);
-  }
-  
-  public void takePicture(boolean needBitmap, boolean needByteArray) {
-    cameraView.takePicture(needBitmap, needByteArray);
-  }
+	@Override
+	public void onPause() {
+		cameraView.onPause();
 
-  public boolean isRecording() {
-    return(cameraView==null ? false : cameraView.isRecording());
-  }
+		super.onPause();
+	}
 
-  public void record() throws Exception {
-    cameraView.record();
-  }
+	public CameraHost getHost() {
+		if (host==null) {
+			host=new SimpleCameraHost(getActivity());
+		}
 
-  public void stopRecording() throws Exception {
-    cameraView.stopRecording();
-  }
+		return(host);
+	}
 
-  public int getDisplayOrientation() {
-    return(cameraView.getDisplayOrientation());
-  }
+	public void setHost(CameraHost host) {
+		this.host=host;
+	}
 
-  public void lockToLandscape(boolean enable) {
-    cameraView.lockToLandscape(enable);
-  }
-  
-  public void autoFocus() {
-    cameraView.autoFocus();
-  }
-  
-  public void cancelAutoFocus() {
-    cameraView.cancelAutoFocus();
-  }
-  
-  public boolean isAutoFocusAvailable() {
-    return(cameraView.isAutoFocusAvailable());
-  }
-  
-  public void restartPreview() {
-    cameraView.restartPreview();
-  }
-  
-  public String getFlashMode() {
-    return(cameraView.getFlashMode());
-  }
+	public void takePicture(Camera.PictureCallback jpeg, boolean flash) {
+		takePicture(false, true,jpeg, flash);
+	}
+
+	public void takePicture(boolean flash) {
+		takePicture(false, true, flash);
+	}
+
+	public void takePicture(boolean needBitmap, boolean needByteArray,Camera.PictureCallback jpeg, boolean flash) {
+		cameraView.takePicture(needBitmap, needByteArray, jpeg, flash);
+	}
+
+	public void takePicture(boolean needBitmap, boolean needByteArray, boolean flash) {
+		cameraView.takePicture(needBitmap, needByteArray, flash);
+	}
+
+	public boolean isRecording() {
+		return(cameraView==null ? false : cameraView.isRecording());
+	}
+
+	public void record(boolean flash, boolean ffc) throws Exception {
+		cameraView.record(flash,ffc);
+	}
+
+	public void stopRecording() throws Exception {
+		cameraView.stopRecording();
+	}
+
+	public int getDisplayOrientation() {
+		return(cameraView.getDisplayOrientation());
+	}
+
+	public void lockToLandscape(boolean enable) {
+		cameraView.lockToLandscape(enable);
+	}
+
+	public void autoFocus() {
+		cameraView.autoFocus();
+	}
+
+	public void cancelAutoFocus() {
+		cameraView.cancelAutoFocus();
+	}
+
+	public boolean isAutoFocusAvailable() {
+		return(cameraView.isAutoFocusAvailable());
+	}
+
+	public void restartPreview() {
+		cameraView.restartPreview();
+	}
+
+	public String getFlashMode() {
+		return(cameraView.getFlashMode());
+	}
 }

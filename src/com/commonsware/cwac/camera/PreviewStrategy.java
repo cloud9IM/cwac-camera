@@ -16,6 +16,7 @@ package com.commonsware.cwac.camera;
 
 import android.hardware.Camera;
 import android.media.MediaRecorder;
+import android.view.Surface;
 import android.view.View;
 import java.io.IOException;
 
@@ -25,4 +26,6 @@ public interface PreviewStrategy {
   void attach(MediaRecorder recorder);
 
   View getWidget();
+  
+  Surface getSurface();
 }
