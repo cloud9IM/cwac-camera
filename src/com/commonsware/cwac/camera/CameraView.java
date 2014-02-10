@@ -443,18 +443,24 @@ Camera.PictureCallback {
 	}
 
 	public void initPreview(int w, int h) {
-		Camera.Parameters parameters=camera.getParameters();
-
-		parameters.setPreviewSize(previewSize.width, previewSize.height);
 		
-//		parameters.setPreviewSize(640, 480);
-//		Size s =parameters.getSupportedPreviewSizes().get(parameters.getSupportedPreviewSizes().size()-1);
-//		parameters.setPreviewSize(s.width,s.height);
-		
-		requestLayout();
+		try{
 
-		camera.setParameters(getHost().adjustPreviewParameters(parameters));
-		startPreview();
+			Camera.Parameters parameters=camera.getParameters();
+
+			parameters.setPreviewSize(previewSize.width, previewSize.height);
+
+			//		parameters.setPreviewSize(640, 480);
+			//		Size s =parameters.getSupportedPreviewSizes().get(parameters.getSupportedPreviewSizes().size()-1);
+			//		parameters.setPreviewSize(s.width,s.height);
+
+			requestLayout();
+
+			camera.setParameters(getHost().adjustPreviewParameters(parameters));
+			startPreview();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	private void startPreview() {
