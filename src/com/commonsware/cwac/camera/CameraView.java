@@ -89,16 +89,21 @@ Camera.PictureCallback {
 		addView(previewStrategy.getWidget());
 		
 		if (camera == null) {
-			cameraId=getHost().getCameraId();
-			camera=Camera.open(cameraId);
-			
-			
-			if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-				onOrientationChange.enable();
+			try {
+				cameraId=getHost().getCameraId();
+				camera=Camera.open(cameraId);
+
+
+				if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
+					onOrientationChange.enable();
+				}
+
+
+				setCameraDisplayOrientation(cameraId, camera);
 			}
-		
-			
-			setCameraDisplayOrientation(cameraId, camera);
+			catch (Exception e){
+				e.printStackTrace();
+			}
 			
 		}
 	}
