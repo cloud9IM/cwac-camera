@@ -366,6 +366,8 @@ Camera.PictureCallback {
 			}
 
 			if (previewSize != null) {
+				previewSize.width = 640;
+				previewSize.height = 480;
 				//        android.util.Log.e("CameraView",
 						//                           String.format("%d x %d", previewSize.width,
 								//                                         previewSize.height));
