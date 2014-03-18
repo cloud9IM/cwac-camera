@@ -454,15 +454,24 @@ Camera.PictureCallback {
 		try{
 
 			Camera.Parameters parameters=camera.getParameters();
-
+			camera.getParameters().getSupportedFocusModes();
 			parameters.setPreviewSize(previewSize.width, previewSize.height);
-
+			List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+			if(supportedFocusModes.contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+				parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+				//camera.autoFocus(getHost());
+			}else if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
+				parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
+				//camera.autoFocus(getHost());
+			}
+			
+			if(!supportedFocusModes.contains("off"))
+				camera.autoFocus(getHost());
 			//		parameters.setPreviewSize(640, 480);
 			//		Size s =parameters.getSupportedPreviewSizes().get(parameters.getSupportedPreviewSizes().size()-1);
 			//		parameters.setPreviewSize(s.width,s.height);
-
 			requestLayout();
-
+			
 			camera.setParameters(getHost().adjustPreviewParameters(parameters));
 			startPreview();
 		} catch (Exception e){
