@@ -195,10 +195,10 @@ public class SimpleCameraHost implements CameraHost {
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   @Override
   public void onAutoFocus(boolean success, Camera camera) {
-    if (success
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      new MediaActionSound().play(MediaActionSound.FOCUS_COMPLETE);
-    }
+//    if (success
+//        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//      new MediaActionSound().play(MediaActionSound.FOCUS_COMPLETE);
+//    }
   }
 
   @Override
