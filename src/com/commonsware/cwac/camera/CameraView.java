@@ -61,10 +61,11 @@ Camera.PictureCallback {
 	private boolean needBitmap=false;
 	private boolean needByteArray=false;
 	private boolean mTempVar = true;
+	private Context mContext = null;
 
 	public CameraView(Context context) {
 		super(context);
-
+		mContext = context;
 		onOrientationChange=new OnOrientationChange(context);
 	}
 
@@ -145,7 +146,8 @@ Camera.PictureCallback {
 			FileOutputStream fos;
 
 			try {
-				File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "tmpsd34.jpg");                
+				String filepath = mContext.getFilesDir().getAbsolutePath();
+				File f = new File( filepath, "tmpsd34.jpg");                
 				fos = new FileOutputStream(f);
 				fos.write(data);
 				fos.close();
