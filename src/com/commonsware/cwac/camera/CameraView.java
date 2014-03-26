@@ -285,7 +285,7 @@ Camera.PictureCallback {
 				recorder.setOrientationHint(270);
 			}
 			
-			recorder.setOutputFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/pingTesting.mp4");
+			recorder.setOutputFile(mContext.getApplicationContext().getFilesDir()+"/pingTesting.mp4");
 			
 			previewStrategy.attach(recorder);
 			recorder.prepare();
