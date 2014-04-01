@@ -50,6 +50,8 @@ Camera.PictureCallback {
 	private PreviewStrategy previewStrategy;
 	private Camera.Size previewSize;
 	private Camera camera;
+	private Camera.Size preferredPicSize;
+	
 	private boolean inPreview=false;
 	private CameraHost host=null;
 	private OnOrientationChange onOrientationChange=null;
@@ -93,6 +95,8 @@ Camera.PictureCallback {
 			try {
 				cameraId=getHost().getCameraId();
 				camera=Camera.open(cameraId);
+				
+				preferredPicSize = getPreferedPicSize();
 
 
 				if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
@@ -196,11 +200,9 @@ Camera.PictureCallback {
 			else
 				pictureParams.setFlashMode(Parameters.FLASH_MODE_OFF);
 			
-			pictureParams.setPictureSize(580, 580);
-			Camera.Size pictureSize=getHost().getPictureSize(pictureParams);
 			
-			pictureParams.setPictureSize(pictureSize.width,
-					pictureSize.height);
+			pictureParams.setPictureSize(preferredPicSize.width, preferredPicSize.height);
+			
 			pictureParams.setPictureFormat(ImageFormat.JPEG);
 			camera.setParameters(getHost().adjustPictureParameters(pictureParams));
 
@@ -610,5 +612,26 @@ Camera.PictureCallback {
 				}
 			}
 		}
+	}
+	
+	
+	private Size getPreferedPicSize(){
+		Size result = null;
+		
+		int MAXWIDTH = 640;
+		int MAXHEIGHT = 480;
+		
+		Camera.Parameters pictureParams = camera.getParameters();
+		List<Size> sizes = pictureParams.getSupportedPictureSizes();
+		result = sizes.get(0);
+		
+	    for (Camera.Size size : pictureParams.getSupportedPictureSizes()) {
+//	    	Log.d("XXX", "width:"+size.width + " height: " + size.height );
+	    	if ( size.width * size.height <=  MAXWIDTH * MAXHEIGHT )
+	    		if (size.width * size.height >= result.width * result.height)
+	    			result = size;	  
+	    }
+		
+		return result;
 	}
 }
