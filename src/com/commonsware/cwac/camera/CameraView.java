@@ -1,5 +1,5 @@
 /***
-  Copyright (c) 2013 CommonsWare, LLC
+   Copyright (c) 2013 CommonsWare, LLC
   Portions Copyright (C) 2007 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,7 +15,13 @@
 
 package com.commonsware.cwac.camera;
 
-import android.R;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -23,26 +29,14 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
-import android.media.CamcorderProfile;
-import android.media.ExifInterface;
 import android.media.MediaRecorder;
 import android.os.Build;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.List;
 
 public class CameraView extends ViewGroup implements
 Camera.PictureCallback {
@@ -51,7 +45,7 @@ Camera.PictureCallback {
 	private Camera.Size previewSize;
 	private Camera camera;
 	private Camera.Size preferredPicSize;
-	
+	private Camera.Size preferredVidSize;
 	private boolean inPreview=false;
 	private CameraHost host=null;
 	private OnOrientationChange onOrientationChange=null;
@@ -97,7 +91,7 @@ Camera.PictureCallback {
 				camera=Camera.open(cameraId);
 				
 				preferredPicSize = getPreferedPicSize();
-
+				preferredVidSize = getPreferedVidSize();
 
 				if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
 					onOrientationChange.enable();
@@ -257,7 +251,7 @@ Camera.PictureCallback {
 //				}else{
 					recorder.setVideoSize(previewSize.width, previewSize.height);
 //				}
-					
+				
 				
 					
 				
@@ -339,6 +333,7 @@ Camera.PictureCallback {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		
 		final int width=
 				resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
 		final int height=
@@ -370,10 +365,11 @@ Camera.PictureCallback {
 			}
 
 			if (previewSize != null) {
-				previewSize.width = 640;
-				previewSize.height = 480;
+				
+				previewSize.width = preferredVidSize.width;
+				previewSize.height = preferredVidSize.height;
 				//        android.util.Log.e("CameraView",
-						//                           String.format("%d x %d", previewSize.width,
+						//                           String.format("%d x %d", previewSize.width,1280
 								//                                         previewSize.height));
 			}
 		}
@@ -616,22 +612,39 @@ Camera.PictureCallback {
 	
 	
 	private Size getPreferedPicSize(){
-		Size result = null;
-		
 		int MAXWIDTH = 640;
 		int MAXHEIGHT = 480;
-		
 		Camera.Parameters pictureParams = camera.getParameters();
 		List<Size> sizes = pictureParams.getSupportedPictureSizes();
-		result = sizes.get(0);
-		
-	    for (Camera.Size size : pictureParams.getSupportedPictureSizes()) {
+
+		return getPreferedSize(sizes, MAXWIDTH, MAXHEIGHT);
+	}
+	
+	private Size getPreferedVidSize(){
+		int MAXWIDTH = 640;
+		int MAXHEIGHT = 480;
+		Camera.Parameters pictureParams = camera.getParameters();
+		List<Size> sizes = pictureParams.getSupportedPreviewSizes();
+
+		return getPreferedSize(sizes, MAXWIDTH, MAXHEIGHT);
+	}
+	
+	private Size getPreferedSize(List<Size> sizes, int maxwidth, int maxheight){
+		Size result = null;
+		int width = 0;
+		int height = 0;
+
+		for (Camera.Size size : sizes) {
 //	    	Log.d("XXX", "width:"+size.width + " height: " + size.height );
-	    	if ( size.width * size.height <=  MAXWIDTH * MAXHEIGHT )
-	    		if (size.width * size.height >= result.width * result.height)
-	    			result = size;	  
+	    	if ( size.width * size.height <=  maxwidth * maxheight )
+	    		if (size.width * size.height >= width * height){
+	    			result = size;
+	    			width = result.width;
+	    			height = result.height;
+	    		}
 	    }
-		
 		return result;
 	}
+	
+
 }
