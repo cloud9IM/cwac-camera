@@ -14,14 +14,17 @@
 
 package com.commonsware.cwac.camera;
 
+
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.util.Log;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CameraFragment extends Fragment {
@@ -118,5 +121,9 @@ public class CameraFragment extends Fragment {
 
 	public String getFlashMode() {
 		return(cameraView.getFlashMode());
+	}
+	
+	public void submitFocusAreaRect(final Rect touchRect){
+		this.cameraView.submitFocusAreaRect(touchRect);
 	}
 }

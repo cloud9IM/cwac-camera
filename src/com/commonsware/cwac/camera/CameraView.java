@@ -21,11 +21,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
+import android.R;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
@@ -37,6 +39,16 @@ import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class CameraView extends ViewGroup implements
 Camera.PictureCallback {
@@ -456,17 +468,7 @@ Camera.PictureCallback {
 			Camera.Parameters parameters=camera.getParameters();
 			camera.getParameters().getSupportedFocusModes();
 			parameters.setPreviewSize(previewSize.width, previewSize.height);
-			List<String> supportedFocusModes = parameters.getSupportedFocusModes();
-			if(supportedFocusModes.contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
-				parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-				//camera.autoFocus(getHost());
-			}else if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
-				parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
-				//camera.autoFocus(getHost());
-			}
-			
-			if(!supportedFocusModes.contains("off"))
-				camera.autoFocus(getHost());
+			setManuallyFocusMode(parameters);
 			//		parameters.setPreviewSize(640, 480);
 			//		Size s =parameters.getSupportedPreviewSizes().get(parameters.getSupportedPreviewSizes().size()-1);
 			//		parameters.setPreviewSize(s.width,s.height);
@@ -647,4 +649,60 @@ Camera.PictureCallback {
 	}
 	
 
+	
+
+	@SuppressLint("NewApi")
+	public void submitFocusAreaRect(final Rect touchRect)
+	{
+		try{
+			
+			Camera.Parameters cameraParameters = camera.getParameters();
+		    //camera.cancelAutoFocus();
+		    if(android.os.Build.VERSION.SDK_INT >= 14){
+		    	if (cameraParameters.getMaxNumFocusAreas() == 0)
+			    {
+			        return;
+			    }
+			    ArrayList<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
+			    focusAreas.add(new Camera.Area(touchRect, 1000));
+
+			    List<String> supportedFocusModes = cameraParameters.getSupportedFocusModes();
+				if(supportedFocusModes.contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+					cameraParameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+					//camera.autoFocus(getHost());
+				}else if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
+					cameraParameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
+					//camera.autoFocus(getHost());
+				}
+			    cameraParameters.setFocusAreas(focusAreas);
+			    cameraParameters.setMeteringAreas(focusAreas);
+			    camera.setParameters(cameraParameters);
+			    camera.autoFocus(getHost());
+		    }
+		    
+		    // Start the autofocus operation
+		    setManuallyFocusMode(cameraParameters);
+		    
+		}catch (Exception e){
+			return ;
+		}
+	    
+	}
+	
+	public void setManuallyFocusMode(Camera.Parameters parameters){
+	
+		List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+		if(supportedFocusModes.contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+			parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+			//camera.autoFocus(getHost());
+		}else if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
+			parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
+			//camera.autoFocus(getHost());
+		}
+		parameters.setFocusAreas(null);
+		parameters.setMeteringAreas(null);
+		camera.setParameters(parameters);
+		if(!supportedFocusModes.contains("off"))
+			camera.autoFocus(getHost());
+	}
 }

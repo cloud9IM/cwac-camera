@@ -15,6 +15,7 @@
 package com.commonsware.cwac.camera.acl;
 
 import android.annotation.TargetApi;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.commonsware.cwac.camera.CameraHost;
 import com.commonsware.cwac.camera.CameraView;
 import com.commonsware.cwac.camera.SimpleCameraHost;
+import android.util.Log;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class CameraFragment extends SherlockFragment {
@@ -117,5 +119,9 @@ public class CameraFragment extends SherlockFragment {
 
 	public String getFlashMode() {
 		return(cameraView.getFlashMode());
+	}
+	
+	public void submitFocusAreaRect(final Rect touchRect){
+		this.cameraView.submitFocusAreaRect(touchRect);
 	}
 }
