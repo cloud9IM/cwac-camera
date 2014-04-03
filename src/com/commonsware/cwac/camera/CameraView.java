@@ -699,8 +699,7 @@ Camera.PictureCallback {
 			parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
 			//camera.autoFocus(getHost());
 		}
-		parameters.setFocusAreas(null);
-		parameters.setMeteringAreas(null);
+		
 		camera.setParameters(parameters);
 		if(!supportedFocusModes.contains("off"))
 			camera.autoFocus(getHost());
