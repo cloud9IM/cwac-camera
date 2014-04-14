@@ -450,7 +450,7 @@ Camera.PictureCallback {
 		}
 	}
 
-	void previewReset(int width, int height) {
+	public void previewReset(int width, int height) {
 		previewStopped();
 		initPreview(width, height);
 	}
@@ -468,7 +468,7 @@ Camera.PictureCallback {
 			Camera.Parameters parameters=camera.getParameters();
 			camera.getParameters().getSupportedFocusModes();
 			parameters.setPreviewSize(previewSize.width, previewSize.height);
-			setManuallyFocusMode(parameters);
+			
 			//		parameters.setPreviewSize(640, 480);
 			//		Size s =parameters.getSupportedPreviewSizes().get(parameters.getSupportedPreviewSizes().size()-1);
 			//		parameters.setPreviewSize(s.width,s.height);
@@ -476,6 +476,7 @@ Camera.PictureCallback {
 			
 			camera.setParameters(getHost().adjustPreviewParameters(parameters));
 			startPreview();
+			setManuallyFocusMode(parameters);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -667,10 +668,7 @@ Camera.PictureCallback {
 			    focusAreas.add(new Camera.Area(touchRect, 1000));
 
 			    List<String> supportedFocusModes = cameraParameters.getSupportedFocusModes();
-				if(supportedFocusModes.contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
-					cameraParameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-					//camera.autoFocus(getHost());
-				}else if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
+				if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
 					cameraParameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
 					//camera.autoFocus(getHost());
 				}
@@ -690,12 +688,9 @@ Camera.PictureCallback {
 	}
 	
 	public void setManuallyFocusMode(Camera.Parameters parameters){
-	
 		List<String> supportedFocusModes = parameters.getSupportedFocusModes();
-		if(supportedFocusModes.contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
-			parameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-			//camera.autoFocus(getHost());
-		}else if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
+		
+		if(supportedFocusModes.contains(Parameters.FOCUS_MODE_AUTO)){
 			parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
 			//camera.autoFocus(getHost());
 		}

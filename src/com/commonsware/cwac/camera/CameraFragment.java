@@ -126,4 +126,8 @@ public class CameraFragment extends Fragment {
 	public void submitFocusAreaRect(final Rect touchRect){
 		this.cameraView.submitFocusAreaRect(touchRect);
 	}
+	
+	public void forceResetPreview(){
+		this.cameraView.previewReset(100, 100);
+	}
 }
