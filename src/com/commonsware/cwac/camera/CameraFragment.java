@@ -124,10 +124,14 @@ public class CameraFragment extends Fragment {
 	}
 	
 	public void submitFocusAreaRect(final Rect touchRect){
-		this.cameraView.submitFocusAreaRect(touchRect);
+        if( this.cameraView != null){
+            this.cameraView.submitFocusAreaRect(touchRect);
+        }
 	}
 	
 	public void forceResetPreview(){
-		this.cameraView.previewReset(100, 100);
+        if (this.cameraView != null){
+            this.cameraView.previewReset(100, 100);
+        }
 	}
 }
