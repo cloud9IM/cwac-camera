@@ -437,7 +437,7 @@ Camera.PictureCallback {
 		try {
 			previewStrategy.attach(camera);
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			getHost().handleException(e);
 		}
 	}
@@ -603,11 +603,15 @@ Camera.PictureCallback {
 
 				if (newOutputOrientation != outputOrientation) {
 					outputOrientation=newOutputOrientation;
-
-					Camera.Parameters params=camera.getParameters();
-					Log.d("CameraDebug", "The params are "+params.toString());
-					params.setRotation(outputOrientation);
-					camera.setParameters(params);
+					try{
+						Camera.Parameters params=camera.getParameters();
+						Log.d("CameraDebug", "The params are "+params.toString());
+						params.setRotation(outputOrientation);
+						camera.setParameters(params);
+					}catch(Exception e){
+						Log.e("CameraView"," Error on orientation changed", e);
+					}
+					
 				}
 			}
 		}
