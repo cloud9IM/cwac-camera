@@ -207,7 +207,8 @@ Camera.PictureCallback {
 				pictureParams.setFlashMode(Parameters.FLASH_MODE_OFF);
 			
 			
-			pictureParams.setPictureSize(preferredPicSize.width, preferredPicSize.height);
+			if( preferredPicSize != null)
+				pictureParams.setPictureSize(preferredPicSize.width, preferredPicSize.height);
 			
 			pictureParams.setPictureFormat(ImageFormat.JPEG);
 			try{
@@ -441,7 +442,7 @@ Camera.PictureCallback {
 		try {
 			previewStrategy.attach(camera);
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			getHost().handleException(e);
 		}
 	}
