@@ -207,10 +207,15 @@ Camera.PictureCallback {
 				pictureParams.setFlashMode(Parameters.FLASH_MODE_OFF);
 			
 			
-			pictureParams.setPictureSize(preferredPicSize.width, preferredPicSize.height);
+			if( preferredPicSize != null)
+				pictureParams.setPictureSize(preferredPicSize.width, preferredPicSize.height);
 			
 			pictureParams.setPictureFormat(ImageFormat.JPEG);
-			camera.setParameters(getHost().adjustPictureParameters(pictureParams));
+			try{
+				camera.setParameters(getHost().adjustPictureParameters(pictureParams));
+			} catch (Exception e){
+				Log.e(TAG,"Error setting parameters", e);
+			}
 
 			camera.takePicture(getHost().getShutterCallback(), null, jpeg);
 			inPreview=false;
